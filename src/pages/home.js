@@ -60,144 +60,83 @@ const Home = ({ userName, userSubscriptions, onLogout }) => {
   };
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", backgroundColor: "#f4f4f9", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", padding: "20px" }}>
-      
-      {/* Header with Username and Logout */}
-      <div style={{ width: "100%", maxWidth: "1200px", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px", backgroundColor: "#fff", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}>
-        <h2 style={{ color: "#333" }}>Welcome, {userName}</h2>
-        <button
-          onClick={handleLogout}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#ff4d4d",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            fontSize: "16px",
-            cursor: "pointer",
-            transition: "background-color 0.3s ease",
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = "#e60000"}
-          onMouseOut={(e) => e.target.style.backgroundColor = "#ff4d4d"}
-        >
-          Logout
-        </button>
-      </div>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        minHeight: "100vh",
+        overflowX: "hidden",
+        overflowY: "auto",
+        margin: 0,
+        padding: 0,
+        background: "linear-gradient(to right, rgba(10, 19, 51, 0.9), rgba(0, 139, 204, 0.9), rgba(0, 51, 102, 0.8), rgba(0, 51, 102, 0.9))",
+      }}
 
-      {/* Subscription Area */}
-      <div style={{ width: "100%", maxWidth: "800px", marginBottom: "30px" }}>
-        <h3 style={{ color: "#333", marginBottom: "15px" }}>Your Subscriptions</h3>
-        {subscriptions.length === 0 ? (
-          <p style={{ textAlign: "center", color: "black", fontWeight:"bold" }}>You have no subscriptions.</p>
-        ) : (
-          subscriptions.map((song) => (
-            <div key={song.id} style={{ 
-              backgroundColor: "#fff", 
-              borderRadius: "8px", 
-              boxShadow: "0 4px 8px rgba(0,0,0,0.1)", 
-              marginBottom: "15px", 
-              padding: "15px", 
-              display: "flex", 
-              alignItems: "center", 
-              justifyContent: "space-between" 
-              }}>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <img src={song.artistImage} alt={song.artist} style={{ width: "50px", height: "50px", borderRadius: "50%", marginRight: "15px" }} />
-                <div>
-                  <p style={{ margin: 0, fontWeight: "bold" }}>{song.title} - {song.artist}</p>
-                  <p style={{ margin: 0, fontSize: "14px", color: "#777" }}>({song.year}, {song.album})</p>
-                </div>
-              </div>
-              <button
-                onClick={() => handleRemove(song.id)}
-                style={{
-                  padding: "8px 15px",
-                  backgroundColor: "#ff4d4d",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  fontSize: "14px",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s ease",
-                }}
-                onMouseOver={(e) => e.target.style.backgroundColor = "#e60000"}
-                onMouseOut={(e) => e.target.style.backgroundColor = "#ff4d4d"}
-              >
-                Remove
-              </button>
-            </div>
-          ))
-        )}
-      </div>
+    >
+      <div
+        style={{
+          position: "relative",
+          zIndex: 2,
 
-      {/* Query Area */}
-      <div style={{ width: "100%", maxWidth: "1000px", backgroundColor: "#fff", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)", padding: "20px", textAlign: "center" }}>
-        <h3 style={{ color: "#333", marginBottom: "20px" }}>Search Music</h3>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
-          <input
-            type="text"
-            placeholder="Title"
-            value={query.title}
-            onChange={(e) => setQuery({ ...query, title: e.target.value })}
-            style={{ padding: "10px", width: "20%", borderRadius: "5px", border: "1px solid #ddd", fontSize: "14px" }}
-          />
-          <input
-            type="text"
-            placeholder="Year"
-            value={query.year}
-            onChange={(e) => setQuery({ ...query, year: e.target.value })}
-            style={{ padding: "10px", width: "20%", borderRadius: "5px", border: "1px solid #ddd", fontSize: "14px" }}
-          />
-          <input
-            type="text"
-            placeholder="Artist"
-            value={query.artist}
-            onChange={(e) => setQuery({ ...query, artist: e.target.value })}
-            style={{ padding: "10px", width: "20%", borderRadius: "5px", border: "1px solid #ddd", fontSize: "14px" }}
-          />
-          <input
-            type="text"
-            placeholder="Album"
-            value={query.album}
-            onChange={(e) => setQuery({ ...query, album: e.target.value })}
-            style={{ padding: "10px", width: "20%", borderRadius: "5px", border: "1px solid #ddd", fontSize: "14px" }}
-          />
+        }}
+      >
+        {/* Header with Username and Logout */}
+        <div style={{
+          padding: "30px", display: "flex", justifyContent: "space-between", alignItems: "center",
+          background: "linear-gradient(to bottom, #000000 0%, #003366 78%)"
+        }}>
+          <h2 style={{ color: "#fff", marginLeft: "3%", }}>Welcome, Natalia</h2>
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#fff",
+              color: "#333",
+              border: "none",
+              borderRadius: "5px",
+              fontSize: "16px",
+              cursor: "pointer",
+              transition: "background-color 0.3s ease",
+            }}
+            onMouseOver={(e) => e.target.style.backgroundColor = "#fff"}
+            onMouseOut={(e) => e.target.style.backgroundColor = "#fff"}
+          >
+            Logout
+          </button>
         </div>
-        <button
-          onClick={handleQuery}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "black",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            fontSize: "16px",
-            cursor: "pointer",
-            transition: "background-color 0.3s ease",
-            alignSelf: "flex-start", // Align with the input fields
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = "#0056b3"}
-          onMouseOut={(e) => e.target.style.backgroundColor = "#007bff"}
-        >
-          Search Songs
-        </button>
-        {message && <p style={{ color: "#e60000", marginTop: "20px" }}>{message}</p>}
-        {queryResults.length > 0 && (
-          <div style={{ marginTop: "20px" }}>
-            {queryResults.map((song) => (
-              <div key={song.id} style={{ backgroundColor: "#f9f9f9", borderRadius: "8px", padding: "15px", display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+
+        {/* Subscription Area */}
+        <div style={{ marginTop: "3%" }}>
+          <h3 style={{ color: "white", marginBottom: "15px", marginLeft: "9%", fontFamily: "Poppins', sans-serif", }}>Your Subscriptions</h3>
+          {subscriptions.length === 0 ? (
+            <p style={{ textAlign: "center", color: "white", fontWeight: "bold", marginBottom: "3%", fontSize: "14px" }}>You have no subscriptions.</p>
+          ) : (
+            subscriptions.map((song) => (
+              <div key={song.id} style={{
+                background: "linear-gradient(to right, #003366 0%, #669999 99%)",
+                borderRadius: "8px",
+                boxShadow: "0 2px 6px rgba(255, 255, 255, 0.1)",
+                // marginBottom: "130px", 
+                padding: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "80%",
+                textAlign: "center",
+                margin: "30px auto",
+              }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <img src={song.artistImage} alt={song.artist} style={{ width: "50px", height: "50px", borderRadius: "50%", marginRight: "15px" }} />
                   <div>
-                    <p style={{ margin: 0, fontWeight: "bold" }}>{song.title} - {song.artist}</p>
-                    <p style={{ margin: 0, fontSize: "14px", color: "#777" }}>({song.year}, {song.album})</p>
+                    <p style={{ margin: 0, fontWeight: "bold", color: "#fff" }}>{song.title} - {song.artist}</p>
+                    <p style={{ margin: 0, fontSize: "14px", color: "#ff7" }}>({song.year}, {song.album})</p>
                   </div>
                 </div>
                 <button
-                  onClick={() => handleSubscribe(song)}
+                  onClick={() => handleRemove(song.id)}
                   style={{
                     padding: "8px 15px",
-                    backgroundColor: "#28a745",
+                    background: "linear-gradient(to bottom, #000000 0%, #003366 100%)",
                     color: "white",
                     border: "none",
                     borderRadius: "5px",
@@ -205,17 +144,107 @@ const Home = ({ userName, userSubscriptions, onLogout }) => {
                     cursor: "pointer",
                     transition: "background-color 0.3s ease",
                   }}
-                  onMouseOver={(e) => e.target.style.backgroundColor = "#218838"}
-                  onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}
+                  onMouseOver={(e) => e.target.style.backgroundColor = "#e60000"}
+                  onMouseOut={(e) => e.target.style.backgroundColor = "#ff4d4d"}
                 >
-                  Subscribe
+                  Remove
                 </button>
               </div>
-            ))}
+            ))
+          )}
+        </div>
+
+        {/* Query Area */}
+        <div style={{ marginTop: "5%", width: "80%", backgroundColor: "rgba(255, 255, 255, 0.8)", borderRadius: "8px", boxShadow: "0px 4px 15px rgba(0,0,0,0.2)", textAlign: "center", margin: "0 auto", padding: "20px", marginBottom: "7%" }}>
+          <h3 style={{
+            background: "linear-gradient(to right, #0A0A33,#008BCC, #003366, #003366)",
+            backgroundClip: "text",
+            color: "transparent", fontSize: "24px"
+          }}>Search Music</h3>
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "20px", }}>
+            <input
+              type="text"
+              placeholder="Title"
+              value={query.title}
+              onChange={(e) => setQuery({ ...query, title: e.target.value })}
+              style={{ padding: "10px", width: "20%", borderRadius: "5px", border: "1px solid #fff", fontSize: "14px" }}
+            />
+            <input
+              type="text"
+              placeholder="Year"
+              value={query.year}
+              onChange={(e) => setQuery({ ...query, year: e.target.value })}
+              style={{ padding: "10px", width: "20%", borderRadius: "5px", border: "1px solid #fff", fontSize: "14px" }}
+            />
+            <input
+              type="text"
+              placeholder="Artist"
+              value={query.artist}
+              onChange={(e) => setQuery({ ...query, artist: e.target.value })}
+              style={{ padding: "10px", width: "20%", borderRadius: "5px", border: "1px solid #fff", fontSize: "14px" }}
+            />
+            <input
+              type="text"
+              placeholder="Album"
+              value={query.album}
+              onChange={(e) => setQuery({ ...query, album: e.target.value })}
+              style={{ padding: "10px", width: "20%", borderRadius: "5px", border: "1px solid #fff", fontSize: "14px" }}
+            />
           </div>
-        )}
-      </div>
-    </div>
+          <button
+            onClick={handleQuery}
+            style={{
+              padding: "10px 20px",
+              background: "linear-gradient(to bottom, #000000 0%, #003366 100%)",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              fontSize: "16px",
+              cursor: "pointer",
+              marginTop: "20px",
+              transition: "background-color 0.3s ease",
+              alignSelf: "flex-start", // Align with the input fields
+            }}
+            onMouseOver={(e) => e.target.style.backgroundColor = "#0056b3"}
+            onMouseOut={(e) => e.target.style.backgroundColor = "#007bff"}
+          >
+            Search Songs
+          </button>
+          {message && <p style={{ color: "#e60000", marginTop: "20px" }}>{message}</p>}
+          {queryResults.length > 0 && (
+            <div style={{ marginTop: "20px" }}>
+              {queryResults.map((song) => (
+                <div key={song.id} style={{ backgroundColor: "#f9f9f9", borderRadius: "8px", padding: "15px", display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <img src={song.artistImage} alt={song.artist} style={{ width: "50px", height: "50px", borderRadius: "50%", marginRight: "15px" }} />
+                    <div>
+                      <p style={{ margin: 0, fontWeight: "bold" }}>{song.title} - {song.artist}</p>
+                      <p style={{ margin: 0, fontSize: "14px", color: "#777" }}>({song.year}, {song.album})</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleSubscribe(song)}
+                    style={{
+                      padding: "8px 15px",
+                      background: "linear-gradient(to bottom, #000000 0%, #003366 100%)",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      transition: "background-color 0.3s ease",
+                    }}
+                    onMouseOver={(e) => e.target.style.backgroundColor = "#218838"}
+                    onMouseOut={(e) => e.target.style.backgroundColor = "#28a745"}
+                  >
+                    Subscribe
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div></div>
   );
 };
 

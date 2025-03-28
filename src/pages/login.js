@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import backgroundImage from "../images/background.jpg";
 import iconImage from "../images/icon.jpeg";
 import musicLtrImage from "../images/music.png";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -28,129 +29,150 @@ function Login() {
     <div
       style={{
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
         height: "100vh",
-        background: `url(${backgroundImage}) no-repeat center center fixed`,
-        backgroundSize: "cover",
+        width: "100vw",
       }}
     >
+      {/* Left Column - Image */}
       <div
         style={{
-          width: "800px",
-          height: "500px",
+          flex: 1,
+          background: `url(https://plus.unsplash.com/premium_photo-1731355235887-9611a0524173?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGVuam95aW5nJTIwbXVzaWN8ZW58MHx8MHx8fDA%3D) center center`,
+          backgroundSize: "cover",
+
+        }}
+      />
+
+
+      {/* Right Column - Login Form */}
+      <div
+        style={{
+          flex: 2,
+          background: "linear-gradient(to right, rgba(10, 19, 51, 0.9), rgba(0, 139, 204, 0.9), rgba(0, 51, 102, 0.8), rgba(0, 51, 102, 0.9))",
+          backgroundSize: "cover",
           display: "flex",
-          flexDirection: "row",
-          background: "linear-gradient(to bottom, rgba(255, 235, 220, 0.7), rgba(250, 215, 195, 0.7))",
-          padding: "20px",
-          borderRadius: "10px",
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        {/* Left-side image */}
-        <div
-          style={{
-            width: "40%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src={iconImage}
-            alt="Symphonia"
-            style={{ width: "100%", borderRadius: "5px" }}
-          />
-        </div>
 
-        {/* Login Form */}
-        <div
-          style={{
-            width: "60%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            background: `url(${musicLtrImage})`,
-            justifyContent: "flex-start",  // Align the children to the top
-            padding: "20px",
-          }}
-        >
+
+
+        <div style={{
+          width: "60%",
+          maxWidth: "100%",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          padding: "40px",
+          borderRadius: "12px",
+          boxShadow: "0px 4px 15px rgba(0,0,0,0.3)",
+          fontFamily: "'Poppins', sans-serif",
+        }}>
           <h3
             style={{
               textAlign: "center",
-              fontSize: "30px",
-              marginTop: "70px", 
-              marginBottom: "70px", 
-              background: "linear-gradient(to right, #0A0A33,#008BCC, #E91E63, #F06292)",  // Gradient from left to right
-              backgroundClip: "text",  // Standard background-clip for text support
+              fontSize: "40px",
+              marginBottom: "30px",
+              background: "linear-gradient(to right, #0A0A33,#008BCC, #003366, #003366)",
+              backgroundClip: "text",
               color: "transparent",
+              marginTop: "4%"
             }}
           >
-            Start Listening with Symphonia
+            Welcome Back, Set Your Playlist
           </h3>
 
-          <form
-            onSubmit={handleLogin}
-            style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}
-          >
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{
-                width: "300px",  // Wider input field
-                marginBottom: "15px",  // Increased margin between fields
-                padding: "10px",  // Increased padding for a better feel
-                borderRadius: "8px",  // Rounded corners
-                border: "1px solid #ccc",  // Subtle border color
-                fontSize: "16px",  // Slightly larger text
-                boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",  // Soft shadow for depth
-                transition: "all 0.3s ease",  // Smooth transition for focus effect
-              }}
-              onFocus={(e) => e.target.style.boxShadow = "0 0 8px rgba(0, 122, 255, 0.6)"}  // Focus effect
-              onBlur={(e) => e.target.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.1)"}  // Remove focus effect
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{
-                width: "300px",  // Same as the email input
-                marginBottom: "20px",  // Margin for better spacing
-                padding: "10px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                fontSize: "16px",
-                boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
-                transition: "all 0.3s ease",
-              }}
-              onFocus={(e) => e.target.style.boxShadow = "0 0 8px rgba(0, 122, 255, 0.6)"}
-              onBlur={(e) => e.target.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.1)"}
-            />
-            <button
-              type="submit"
-              style={{
-                width: "100px",  // Match width with the inputs
-                padding: "12px",  // Increase padding for a more comfortable button
-                background: "black",
-                color: "white",
-                cursor: "pointer",
-                border: "none",
-                borderRadius: "8px",
-                fontSize: "16px",
-                transition: "all 0.3s ease",  // Smooth transition effect for the button
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",  // Adding shadow for depth
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = "#3c3c3c"}  // Hover effect
-              onMouseOut={(e) => e.target.style.backgroundColor = "black"}  // Revert on mouse out
-            >
-              Login
-            </button>
+          <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", marginTop: "10%" }}>
+            {/* Email Field */}
+            <div style={{ position: "relative", width: "100%", maxWidth: "100%", marginBottom: "15px" }}>
+              <FaEnvelope
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "10px",
+                  transform: "translateY(-50%)",
+                  color: "#888",
+                  pointerEvents: "none",
+                }}
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: "10px 10px 10px 35px", // Padding-left for icon
+                  borderRadius: "8px",
+                  border: "1px solid #fff", // White border
+                  fontSize: "16px",
+                  boxSizing: "border-box",
+                  boxShadow: "0 2px 6px rgba(255, 255, 255, 0.1)", // White subtle shadow
+                  transition: "all 0.3s ease",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Adjusting background to enhance visibility
+                }}
+                onFocus={(e) => (e.target.style.boxShadow = "0 0 8px rgba(0, 122, 255, 0.6)")}
+                onBlur={(e) => (e.target.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.1)")}
+              />
+            </div>
+
+            {/* Password Field */}
+            <div style={{ position: "relative", width: "100%", maxWidth: "100%", marginBottom: "20px" }}>
+              <FaLock
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "10px",
+                  transform: "translateY(-50%)",
+                  color: "#888",
+                  pointerEvents: "none",
+                }}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  width: "100%",
+                  padding: "10px 10px 10px 35px", // Padding-left for icon
+                  borderRadius: "8px",
+                  border: "1px solid #fff", // White border
+                  fontSize: "16px",
+                  boxSizing: "border-box",
+                  boxShadow: "0 2px 6px rgba(255, 255, 255, 0.1)", // White subtle shadow
+                  transition: "all 0.3s ease",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                }}
+                onFocus={(e) => (e.target.style.boxShadow = "0 0 8px rgba(0, 122, 255, 0.6)")}
+                onBlur={(e) => (e.target.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.1)")}
+              />
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "center", width: "100%", marginTop: "10%", marginBottom: "10px" }}>
+              <button
+                type="submit"
+                style={{
+                  width: "120px",
+                  padding: "12px",
+                  background: "linear-gradient(to bottom, #000000 0%, #003366 100%)",
+
+                  color: "white",
+                  cursor: "pointer",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = "#3c3c3c")}
+                onMouseOut={(e) => (e.target.style.backgroundColor = "black")}
+              >
+                Login
+              </button>
+            </div>
+
           </form>
           {error && (
             <p style={{ color: "#ba0000", fontSize: "12px", textAlign: "center", fontWeight: "bold" }}>
@@ -158,12 +180,18 @@ function Login() {
             </p>
           )}
           <p style={{ fontSize: "12px", textAlign: "center", marginTop: "10px", fontWeight: "bold" }}>
-            Don't have an account? <a href="/register" style={{ color: "blue" }}>Register</a>
+            Don't have an account? <a href="/register" style={{
+              fontSize: "14px",
+              background: "linear-gradient(to bottom, #0A0A33,#008BCC, #003366, #003366)",
+              backgroundClip: "text",
+              color: "transparent",
+            }}>Register</a>
           </p>
         </div>
       </div>
     </div>
   );
+
 }
 
 export default Login;
