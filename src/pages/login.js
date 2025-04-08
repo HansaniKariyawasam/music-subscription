@@ -8,17 +8,38 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Hardcoded credentials (Replace with real authentication later)
-    const validEmail = "test@example.com";
-    const validPassword = "password123";
+    // Create the request body
+    const requestBody = {
+      email,
+      password,
+    };
 
-    if (email === validEmail && password === validPassword) {
-      navigate("/home"); // Redirect to Home page
-    } else {
-      setError("Email or password is invalid");
+    try {
+      // Send the login credentials to your backend API
+      const response = await fetch("http://localhost:5001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const result = await response.json(); // Parse the JSON response
+
+      // Check for success or failure
+      if (response.ok) {
+        // If login is successful, navigate to home page
+        navigate("/home");
+      } else {
+        // If login fails, show error message
+        setError(result.message);
+      }
+    } catch (error) {
+      // If there was an error with the request (network issues, etc.)
+      setError("Something went wrong. Please try again.");
     }
   };
 
