@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import backgroundImage from "../images/background.jpg";
-import iconImage from "../images/icon.jpeg";
-import musicLtrImage from "../images/music.png";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 
 function Login() {
@@ -78,7 +75,7 @@ function Login() {
               marginTop: "4%"
             }}
           >
-            Welcome Back, Set Your Playlist
+            Welcome Back, to Symphony
           </h3>
 
           <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", marginTop: "10%" }}>
