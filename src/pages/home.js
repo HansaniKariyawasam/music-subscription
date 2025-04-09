@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 
+
 // Dummy data for demonstration
 const dummySongs = [
   { id: 1, title: "Song 1", artist: "Artist 1", year: "2021", album: "Album 1", artistImage: "https://via.placeholder.com/50" },
   { id: 2, title: "Song 2", artist: "Artist 2", year: "2022", album: "Album 2", artistImage: "https://via.placeholder.com/50" },
 ];
 
-const Home = ({ userName, userSubscriptions, onLogout }) => {
+const Home = ({ userSubscriptions, onLogout }) => {
   const navigate = useNavigate(); // Initialize the useNavigate hook
   const [subscriptions, setSubscriptions] = useState(userSubscriptions || []);
   const [query, setQuery] = useState({
@@ -18,8 +19,15 @@ const Home = ({ userName, userSubscriptions, onLogout }) => {
   });
   const [queryResults, setQueryResults] = useState([]);
   const [message, setMessage] = useState("");
+  const [userName, setUserName] = useState(""); 
 
   useEffect(() => {
+    // Get user_name from localStorage
+    const storedUserName = localStorage.getItem("user_name");
+    
+    if (storedUserName) {
+      setUserName(storedUserName); // Set user_name from localStorage
+    }
     // Simulate fetching subscriptions from DynamoDB
     setSubscriptions(userSubscriptions || []);
   }, [userSubscriptions]);
@@ -84,7 +92,9 @@ const Home = ({ userName, userSubscriptions, onLogout }) => {
           padding: "30px", display: "flex", justifyContent: "space-between", alignItems: "center",
           background: "linear-gradient(to bottom, #000000 0%, #003366 78%)"
         }}>
-          <h2 style={{ color: "#fff", marginLeft: "3%", }}>Welcome, Natalia</h2>
+          <h2 style={{ color: "#fff", marginLeft: "3%", }}>
+          Welcome back, {userName || "Guest"}
+          </h2>
           <button
             onClick={handleLogout}
             style={{

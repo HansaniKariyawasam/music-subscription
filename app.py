@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for the app
 
 # Initialize DynamoDB resource with specific credentials 
-# add here
+# add code here
 
 # 1. Login Route
 @app.route('/login', methods=['POST'])
@@ -26,10 +26,11 @@ def login():
         user_item = search_user[0]  # Access the first item in the list
         user_email = user_item.get('email', {}).get('S', None)  # Extract 'email' value
         uesr_password = user_item.get('password', {}).get('S', None)  # Extract 'password' value
-
+        user_name = user_item.get('user_name', {}).get('S', None)  # Extract 'user_name'
+        
         # Check if the user exists in the DynamoDB table
         if (email == user_email and password == uesr_password):
-            return jsonify({'message': 'Login successful'}), 200
+            return jsonify({'message': 'Login successful', 'user_name': user_name}), 200
     return jsonify({'message': 'Invalid Username or password'}), 401
 
 # 2. Register Route
