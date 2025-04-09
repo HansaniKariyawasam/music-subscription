@@ -17,26 +17,34 @@ function Register() {
     { email: "test@example.com", username: "testuser", password: "password123" },
   ];
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-
-    // Check if the email already exists
-    const existingUser = users.find((user) => user.email === email);
-
-    if (existingUser) {
-      // If email exists, show error
-      setError("The email already exists");
-      setSuccess(""); // Clear success message
-    } else {
-      // If email is unique, add new user and show success
-      users.push({ email, username, password });
-      setError(""); // Clear error message
-      setSuccess("Registration successful! You can now login.");
-
-      // Redirect to login page after successful registration
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+  
+    try {
+      const response = await fetch("http://localhost:5001/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, username, password })
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        setError("");
+        setSuccess("Registration successful! You can now login.");
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        setError(data.message || "Registration failed");
+        setSuccess("");
+      }
+    } catch (error) {
+      setError("Something went wrong. Please try again.");
+      setSuccess("");
+      console.error("Registration error:", error);
     }
   };
 
