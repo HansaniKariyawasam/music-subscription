@@ -100,8 +100,6 @@ def load_json_data():
         df = pd.json_normalize(df['songs'])  # Flatten the 'songs' data
         # Add an auto-incrementing 'id' column starting from 1
         df.insert(0, 'id', range(1, len(df) + 1))  # Insert 'id' as the first column
-        
-        print(df)
         return df
     else:
         raise FileNotFoundError(f"The file {json_file_path} was not found.")
@@ -142,8 +140,57 @@ def create_music_table():
     except Exception as e:
         print(f"Error checking or creating table: {e}")
 
+# Function to insert songs into DynamoDB
+def insert_songs_into_dynamodb(df):
+    try:
+        for index, row in df.iterrows():
+            dynamodb.put_item(
+                TableName='music',
+                Item={
+                    'songid': {'N': str(row['id'])},
+                    'title': {'S': row['title']},
+                    'artist': {'S': row['artist']},
+                    'year': {'S': str(row['year'])},
+                    'album': {'S': row['album']},
+                    'image_url': {'S': row['img_url']}
+                }
+            )
+        print(f"{len(df)} songs inserted into the 'music' table.")
+    except Exception as e:
+        print(f"Error inserting songs into table: {e}")
+
+# Main function to check table existence, insert data if necessary
+def add_data_music_table():
+    try:
+        # Check if the 'music' table exists
+        response = dynamodb.list_tables()
+        table_names = response.get('TableNames', [])
+
+        if 'music' in table_names:
+            print("The 'music' table exists. Checking if it is empty...")
+
+            # Check if the table is empty
+            response = dynamodb.scan(TableName='music')
+            items = response.get('Items', [])
+
+            if len(items) == 0:
+                print("The 'music' table is empty. Loading data and inserting...")
+                # Load the data from the JSON file
+                df = load_json_data()
+                insert_songs_into_dynamodb(df)
+            else:
+                print("The 'music' table already has data.")
+        else:
+            print("The 'music' table does not exist. Creating the table...")
+            create_music_table()
+            # After creating the table, load the data and insert it
+            df = load_json_data()
+            insert_songs_into_dynamodb(df)
+    except Exception as e:
+        print(f"Error in add_data_music_table: {e}")
+
 if __name__ == '__main__':
     # Call the function to check if the 'music' table exists, and create it if not
     create_music_table()
-    load_json_data()
+    add_data_music_table()
     app.run(debug=True, host="0.0.0.0", port=5001)
