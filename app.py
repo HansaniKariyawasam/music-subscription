@@ -103,7 +103,7 @@ def load_json_data():
         raise FileNotFoundError(f"The file {json_file_path} was not found.")
     
 # Function to check and create the table if it doesn't exist
-def create_music_table_if_not_exists():
+def create_music_table():
     try:
         # List existing tables
         response = dynamodb.list_tables()
@@ -138,9 +138,7 @@ def create_music_table_if_not_exists():
     except Exception as e:
         print(f"Error checking or creating table: {e}")
 
-
-# Call the function to check if the 'music' table exists, and create it if not
-create_music_table_if_not_exists()
-
 if __name__ == '__main__':
+    # Call the function to check if the 'music' table exists, and create it if not
+    create_music_table()
     app.run(debug=True, host="0.0.0.0", port=5001)
