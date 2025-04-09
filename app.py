@@ -1,13 +1,15 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import boto3
+import pandas as pd
+import os
 
 # Initialize Flask App
 app = Flask(__name__)
 CORS(app)  # Enable CORS for the app
 
 # Initialize DynamoDB resource with specific credentials 
-# add code here
+# add here
 
 # 1. Login Route
 @app.route('/login', methods=['POST'])
@@ -84,7 +86,23 @@ def add_new_user(email, user_name, password):
         print(f"Failed to add user {email} to the database.")
         return {'message': 'Failed to register user'}, 500
 
-# 3. Music Route
+# Load the JSON file from the data folder
+def load_json_data():
+    # Define the path to the JSON file
+    json_file_path = os.path.join("data", "2025a1.json")
+    
+    # Check if the file exists before trying to read it
+    if os.path.exists(json_file_path):
+        # Read the JSON file into a pandas DataFrame
+        df = pd.read_json(json_file_path)
+        
+        # Normalize the 'songs' column if needed
+        df = pd.json_normalize(df['songs'])  # Flatten the 'songs' data
+        return df
+    else:
+        raise FileNotFoundError(f"The file {json_file_path} was not found.")
+    
+load_json_data()
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5001)
