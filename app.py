@@ -98,6 +98,10 @@ def load_json_data():
         
         # Normalize the 'songs' column if needed
         df = pd.json_normalize(df['songs'])  # Flatten the 'songs' data
+        # Add an auto-incrementing 'id' column starting from 1
+        df.insert(0, 'id', range(1, len(df) + 1))  # Insert 'id' as the first column
+        
+        print(df)
         return df
     else:
         raise FileNotFoundError(f"The file {json_file_path} was not found.")
@@ -117,14 +121,14 @@ def create_music_table():
                 TableName='music',
                 KeySchema=[
                     {
-                        'AttributeName': 'title',
+                        'AttributeName': 'songid',
                         'KeyType': 'HASH'  # Partition key
                     }
                 ],
                 AttributeDefinitions=[
                     {
-                        'AttributeName': 'title',
-                        'AttributeType': 'S'
+                        'AttributeName': 'songid',
+                        'AttributeType': 'N'
                     }
                 ],
                 ProvisionedThroughput={
@@ -141,4 +145,5 @@ def create_music_table():
 if __name__ == '__main__':
     # Call the function to check if the 'music' table exists, and create it if not
     create_music_table()
+    load_json_data()
     app.run(debug=True, host="0.0.0.0", port=5001)
