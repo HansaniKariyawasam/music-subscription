@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import backgroundImage from "../images/background.jpg";
-import musicLtrImage from "../images/music.png";
 import { FaEnvelope, FaUser, FaLock } from 'react-icons/fa';
 
 function Register() {
@@ -11,11 +9,6 @@ function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-
-  // Simulating the login table as an array of objects
-  const users = [
-    { email: "test@example.com", username: "testuser", password: "password123" },
-  ];
 
   const handleRegister = async (e) => {
     e.preventDefault();

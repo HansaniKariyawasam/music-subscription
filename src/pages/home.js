@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
-// import backgroundImage from "../images/background.jpg";
 
 // Dummy data for demonstration
 const dummySongs = [
