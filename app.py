@@ -58,7 +58,7 @@ def register():
 def search_user_by_email(email):
     # Query for items with a specific email
     response = dynamodb.query(
-        TableName='user_info_muc',  # Name of your table
+        TableName='login',  # Name of your table
         KeyConditionExpression='email = :email',  # Query on the 'email' partition key
         ExpressionAttributeValues={
             ':email': {'S': email}  # Replace with the email you're searching for
@@ -71,7 +71,7 @@ def search_user_by_email(email):
 
 def add_new_user(email, user_name, password):
     response = dynamodb.put_item(
-        TableName='user_info_muc',
+        TableName='login',
         Item={
             'email': {'S': email},
             'user_name': {'S': user_name},
