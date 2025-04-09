@@ -160,7 +160,7 @@ def insert_songs_into_dynamodb(df):
         print(f"Error inserting songs into table: {e}")
 
 # Main function to check table existence, insert data if necessary
-def add_data_music_table():
+def add_data_into_music_table():
     try:
         # Check if the 'music' table exists
         response = dynamodb.list_tables()
@@ -192,5 +192,5 @@ def add_data_music_table():
 if __name__ == '__main__':
     # Call the function to check if the 'music' table exists, and create it if not
     create_music_table()
-    add_data_music_table()
+    add_data_into_music_table()
     app.run(debug=True, host="0.0.0.0", port=5001)
