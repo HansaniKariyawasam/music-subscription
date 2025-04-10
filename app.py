@@ -232,6 +232,27 @@ def get_user_subscribed_songs(email):
         print(f"Error fetching subscriptions: {e}")
         return jsonify({'message': 'Error fetching subscriptions'}), 500
 
+@app.route('/unsubscribe', methods=['POST'])
+def unsubscribe_song():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        songid = str(data.get('songid'))
+
+        dynamodb.delete_item(
+            TableName='subscriptions',
+            Key={
+                'email': {'S': email},
+                'songid': {'N': songid}
+            }
+        )
+        return jsonify({'message': 'Unsubscribed'}), 200
+
+    except Exception as e:
+        print(f"Error in unsubscribe: {e}")
+        return jsonify({'message': 'Failed to unsubscribe'}), 500
+
+
 if __name__ == '__main__':
     # Call the function to check if the 'music' table exists, and create it if not
     create_music_table()

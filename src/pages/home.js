@@ -14,6 +14,8 @@ const Home = ({ userSubscriptions, onLogout }) => {
   const [message, setMessage] = useState("");
   const [userName, setUserName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [removeMessage, setRemoveMessage] = useState("");
+  const [removingSongId, setRemovingSongId] = useState(null);
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("user_name");
@@ -40,11 +42,32 @@ const Home = ({ userSubscriptions, onLogout }) => {
   }, []);
 
 
-  const handleRemove = (songId) => {
-    const updatedSubscriptions = subscriptions.filter(song => song.id !== songId);
-    setSubscriptions(updatedSubscriptions);
-    console.log("Remove song from DynamoDB", songId);
+  const handleRemove = async (songId, songTitle) => {
+    const email = localStorage.getItem("userEmail");
+    setRemovingSongId(songId);
+
+    try {
+      const response = await fetch("http://localhost:5001/unsubscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, songid: songId }),
+      });
+
+      if (response.ok) {
+        setSubscriptions(prev => prev.filter(song => song.id !== songId));
+        setRemoveMessage(`"${songTitle}" removed from your subscriptions`);
+      } else {
+        alert("Failed to unsubscribe.");
+      }
+    } catch (error) {
+      console.error("Unsubscribe error:", error);
+      alert("An error occurred while unsubscribing.");
+    } finally {
+      setRemovingSongId(null);
+      setTimeout(() => setRemoveMessage(""), 3000);
+    }
   };
+
 
   const handleSubscribe = (song) => {
     setSubscriptions([...subscriptions, song]);
@@ -129,6 +152,41 @@ const Home = ({ userSubscriptions, onLogout }) => {
             Your Subscriptions
           </h3>
 
+          {removeMessage && (
+            <div
+              className="alert alert-dismissible fade show"
+              role="alert"
+              style={{
+                position: "fixed",
+                top: "80px",
+                right: "20px",
+                zIndex: 1050,
+                backgroundColor: "white",
+                color: "#333",
+                border: "1px solid #ccc",
+                padding: "15px 20px",
+                borderRadius: "8px",
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+                minWidth: "250px",
+                maxWidth: "400px",
+                fontWeight: "500",
+                fontFamily: "Poppins', sans-serif",
+                fontSize: "14px",
+                gap: "10px",
+                display: "flex",
+              }}
+            >
+              {removeMessage}
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+                onClick={() => setRemoveMessage("")}
+              ></button>
+            </div>
+          )}
+
           {loading ? (
             <div style={{ textAlign: "center", marginTop: "20px" }}>
               <div className="spinner-border text-light" role="status">
@@ -180,7 +238,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
                   </div>
                 </div>
                 <button
-                  onClick={() => handleRemove(song.id)}
+                  onClick={() => handleRemove(song.id, song.title)}
                   style={{
                     padding: "8px 15px",
                     background: "linear-gradient(to bottom, #000000 0%, #003366 100%)",
@@ -190,12 +248,21 @@ const Home = ({ userSubscriptions, onLogout }) => {
                     fontSize: "14px",
                     cursor: "pointer",
                     transition: "background-color 0.3s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
                   }}
-                  onMouseOver={(e) => e.target.style.backgroundColor = "#e60000"}
-                  onMouseOut={(e) => e.target.style.backgroundColor = "#ff4d4d"}
+                  disabled={removingSongId === song.id}
                 >
-                  Remove
+                  {removingSongId === song.id ? (
+                    <div className="spinner-border spinner-border-sm text-light" role="status">
+                      <span className="visually-hidden" style={{ fontFamily: "Poppins', sans-serif" }}>Loading...</span>
+                    </div>
+                  ) : (
+                    "Remove"
+                  )}
                 </button>
+
               </div>
             ))
           )}
