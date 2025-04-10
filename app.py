@@ -189,6 +189,49 @@ def add_data_into_music_table():
     except Exception as e:
         print(f"Error in add_data_music_table: {e}")
 
+@app.route('/subscriptions/<email>', methods=['GET'])
+def get_user_subscribed_songs(email):
+    try:
+        # 1. Get song IDs from subscriptions table
+        sub_response = dynamodb.query(
+            TableName='subscriptions',
+            KeyConditionExpression='email = :email',
+            ExpressionAttributeValues={':email': {'S': email}}
+        )
+        subscribed_items = sub_response.get('Items', [])
+
+        if not subscribed_items:
+            return jsonify([]), 200
+
+        songs = []
+
+        # 2. Get song details from music table
+        for item in subscribed_items:
+            songid = int(item['songid']['N'])
+
+            music_response = dynamodb.get_item(
+                TableName='music',
+                Key={'songid': {'N': str(songid)}}
+            )
+
+            music_item = music_response.get('Item', None)
+
+            if music_item:
+                songs.append({
+                    'id': songid,
+                    'title': music_item['title']['S'],
+                    'artist': music_item['artist']['S'],
+                    'album': music_item['album']['S'],
+                    'year': int(music_item['year']['S']),
+                    'image_url': music_item['image_url']['S']
+                })
+
+        return jsonify(songs), 200
+
+    except Exception as e:
+        print(f"Error fetching subscriptions: {e}")
+        return jsonify({'message': 'Error fetching subscriptions'}), 500
+
 if __name__ == '__main__':
     # Call the function to check if the 'music' table exists, and create it if not
     create_music_table()
