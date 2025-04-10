@@ -34,6 +34,7 @@ function Login() {
         // If login is successful, navigate to home page
         const userName = result.user_name; // Extract the user_name from the response
         localStorage.setItem("user_name", userName); // Example of saving to localStorage
+        localStorage.setItem("userEmail", email);
         navigate("/home");
       } else {
         // If login fails, show error message
