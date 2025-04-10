@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 
-
-// Dummy data for demonstration
-const dummySongs = [
-  { id: 1, title: "Song 1", artist: "Artist 1", year: "2021", album: "Album 1", artistImage: "https://via.placeholder.com/50" },
-  { id: 2, title: "Song 2", artist: "Artist 2", year: "2022", album: "Album 2", artistImage: "https://via.placeholder.com/50" },
-];
-
 const Home = ({ userSubscriptions, onLogout }) => {
   const navigate = useNavigate(); // Initialize the useNavigate hook
   const [subscriptions, setSubscriptions] = useState(userSubscriptions || []);
@@ -19,18 +12,33 @@ const Home = ({ userSubscriptions, onLogout }) => {
   });
   const [queryResults, setQueryResults] = useState([]);
   const [message, setMessage] = useState("");
-  const [userName, setUserName] = useState(""); 
+  const [userName, setUserName] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get user_name from localStorage
     const storedUserName = localStorage.getItem("user_name");
-    
+    const storedEmail = localStorage.getItem("userEmail");
+
     if (storedUserName) {
-      setUserName(storedUserName); // Set user_name from localStorage
+      setUserName(storedUserName);
     }
-    // Simulate fetching subscriptions from DynamoDB
-    setSubscriptions(userSubscriptions || []);
-  }, [userSubscriptions]);
+
+    if (storedEmail) {
+      fetch(`http://localhost:5001/subscriptions/${storedEmail}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setSubscriptions(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch subscriptions:", err);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false); // 
+    }
+  }, []);
+
 
   const handleRemove = (songId) => {
     const updatedSubscriptions = subscriptions.filter(song => song.id !== songId);
@@ -44,22 +52,23 @@ const Home = ({ userSubscriptions, onLogout }) => {
   };
 
   const handleQuery = () => {
-    const filteredSongs = dummySongs.filter(song => {
-      return (
-        (query.title ? song.title.toLowerCase().includes(query.title.toLowerCase()) : true) &&
-        (query.year ? song.year.includes(query.year) : true) &&
-        (query.artist ? song.artist.toLowerCase().includes(query.artist.toLowerCase()) : true) &&
-        (query.album ? song.album.toLowerCase().includes(query.album.toLowerCase()) : true)
-      );
-    });
+    //   const filteredSongs = dummySongs.filter(song => {
+    //     return (
+    //       (query.title ? song.title.toLowerCase().includes(query.title.toLowerCase()) : true) &&
+    //       (query.year ? song.year.includes(query.year) : true) &&
+    //       (query.artist ? song.artist.toLowerCase().includes(query.artist.toLowerCase()) : true) &&
+    //       (query.album ? song.album.toLowerCase().includes(query.album.toLowerCase()) : true)
+    //     );
+    //   }
+    // );
 
-    if (filteredSongs.length === 0) {
-      setMessage("No result is retrieved. Please query again.");
-      setQueryResults([]);
-    } else {
-      setMessage("");
-      setQueryResults(filteredSongs);
-    }
+    //   if (filteredSongs.length === 0) {
+    //     setMessage("No result is retrieved. Please query again.");
+    //     setQueryResults([]);
+    //   } else {
+    //     setMessage("");
+    //     setQueryResults(filteredSongs);
+    //   }
   };
 
   const handleLogout = () => {
@@ -93,7 +102,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
           background: "linear-gradient(to bottom, #000000 0%, #003366 78%)"
         }}>
           <h2 style={{ color: "#fff", marginLeft: "3%", }}>
-          Welcome back, {userName || "Guest"}
+            Welcome back, {userName || "Guest"}
           </h2>
           <button
             onClick={handleLogout}
@@ -116,16 +125,36 @@ const Home = ({ userSubscriptions, onLogout }) => {
 
         {/* Subscription Area */}
         <div style={{ marginTop: "3%" }}>
-          <h3 style={{ color: "white", marginBottom: "15px", marginLeft: "9%", fontFamily: "Poppins', sans-serif", }}>Your Subscriptions</h3>
-          {subscriptions.length === 0 ? (
-            <p style={{ textAlign: "center", color: "white", fontWeight: "bold", marginBottom: "3%", fontSize: "14px" }}>You have no subscriptions.</p>
+          <h3 style={{ color: "white", marginBottom: "15px", marginLeft: "9%", fontFamily: "Poppins', sans-serif" }}>
+            Your Subscriptions
+          </h3>
+
+          {loading ? (
+            <div style={{ textAlign: "center", marginTop: "20px" }}>
+              <div className="spinner-border text-light" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p style={{ color: "white", fontWeight: "bold", marginTop: "10px" }}>
+                Loading your subscriptions...
+              </p>
+            </div>
+
+          ) : subscriptions.length === 0 ? (
+            <p style={{
+              textAlign: "center",
+              color: "white",
+              fontWeight: "bold",
+              marginBottom: "3%",
+              fontSize: "14px"
+            }}>
+              You have no subscriptions.
+            </p>
           ) : (
             subscriptions.map((song) => (
               <div key={song.id} style={{
                 background: "linear-gradient(to right, #003366 0%, #669999 99%)",
                 borderRadius: "8px",
                 boxShadow: "0 2px 6px rgba(255, 255, 255, 0.1)",
-                // marginBottom: "130px", 
                 padding: "20px",
                 display: "flex",
                 alignItems: "center",
@@ -135,10 +164,19 @@ const Home = ({ userSubscriptions, onLogout }) => {
                 margin: "30px auto",
               }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  <img src={song.artistImage} alt={song.artist} style={{ width: "50px", height: "50px", borderRadius: "50%", marginRight: "15px" }} />
+                  <img src={song.image_url} alt={song.artist} style={{
+                    width: "50px",
+                    height: "50px",
+                    borderRadius: "50%",
+                    marginRight: "15px"
+                  }} />
                   <div>
-                    <p style={{ margin: 0, fontWeight: "bold", color: "#fff" }}>{song.title} - {song.artist}</p>
-                    <p style={{ margin: 0, fontSize: "14px", color: "#ff7" }}>({song.year}, {song.album})</p>
+                    <p style={{ margin: 0, fontWeight: "bold", color: "#fff" }}>
+                      {song.title} - {song.artist}
+                    </p>
+                    <p style={{ margin: 0, fontSize: "14px", color: "#ff7" }}>
+                      ({song.year}, {song.album})
+                    </p>
                   </div>
                 </div>
                 <button
