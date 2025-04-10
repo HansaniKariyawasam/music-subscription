@@ -252,6 +252,86 @@ def unsubscribe_song():
         print(f"Error in unsubscribe: {e}")
         return jsonify({'message': 'Failed to unsubscribe'}), 500
 
+@app.route('/query', methods=['POST'])
+def query_music():
+    try:
+        data = request.get_json()
+        print("Received query:", data)
+
+        filters = []
+        expression_values = {}
+        expression_names = {}
+
+        if data.get('title'):
+            filters.append("title = :title")
+            expression_values[":title"] = {"S": data['title']}
+        if data.get('year'):
+            filters.append("#yr = :year")
+            expression_values[":year"] = {"S": str(data['year'])}
+            expression_names["#yr"] = "year"
+        if data.get('artist'):
+            filters.append("artist = :artist")
+            expression_values[":artist"] = {"S": data['artist']}
+        if data.get('album'):
+            filters.append("album = :album")
+            expression_values[":album"] = {"S": data['album']}
+
+        if not filters:
+            return jsonify([]), 400
+
+        filter_expression = " AND ".join(filters)
+
+        scan_kwargs = {
+            "TableName": "music",
+            "FilterExpression": filter_expression,
+            "ExpressionAttributeValues": expression_values
+        }
+
+        if expression_names:
+            scan_kwargs["ExpressionAttributeNames"] = expression_names
+
+        response = dynamodb.scan(**scan_kwargs)
+
+        items = response.get('Items', [])
+        results = []
+        for item in items:
+            results.append({
+                'id': int(item['songid']['N']),
+                'title': item['title']['S'],
+                'artist': item['artist']['S'],
+                'year': int(item['year']['S']),
+                'album': item['album']['S'],
+                'image_url': item['image_url']['S']
+            })
+
+        return jsonify(results), 200
+
+    except Exception as e:
+        print(f"Error in /query route: {e}")
+        return jsonify([]), 500
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe_song():
+    try:
+        data = request.get_json()
+        email = data['email']
+        song = data['song']
+        songid = str(song['id'])
+
+        dynamodb.put_item(
+            TableName='subscriptions',
+            Item={
+                'email': {'S': email},
+                'songid': {'N': songid}
+            }
+        )
+
+        return jsonify({'message': 'Subscribed successfully'}), 200
+
+    except Exception as e:
+        print(f"Error in /subscribe: {e}")
+        return jsonify({'message': 'Failed to subscribe'}), 500
+
 
 if __name__ == '__main__':
     # Call the function to check if the 'music' table exists, and create it if not
