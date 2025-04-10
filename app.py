@@ -3,6 +3,8 @@ from flask_cors import CORS
 import boto3
 import pandas as pd
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Initialize Flask App
 app = Flask(__name__)
@@ -10,6 +12,14 @@ CORS(app)  # Enable CORS for the app
 
 # Initialize DynamoDB resource with specific credentials 
 # add here
+aws_access_key_id = os.getenv("aws_access_key_id")
+aws_secret_access_key = os.getenv("aws_secret_access_key")
+aws_session_token = os.getenv("aws_session_token")
+region_name = os.getenv("AWS_REGION")
+dynamodb = boto3.client('dynamodb',aws_access_key_id = aws_access_key_id, 
+                      aws_secret_access_key = aws_secret_access_key,
+                      aws_session_token = aws_session_token,
+                        region_name = region_name)
 
 # 1. Login Route
 @app.route('/login', methods=['POST'])
