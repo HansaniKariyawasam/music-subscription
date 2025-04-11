@@ -19,6 +19,12 @@ dynamodb = boto3.client('dynamodb',aws_access_key_id = aws_access_key_id,
                       aws_secret_access_key = aws_secret_access_key,
                       aws_session_token = aws_session_token,
                         region_name = region_name)
+s3 = boto3.client('s3',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    aws_session_token=aws_session_token,
+    region_name=region_name
+)
 
 # 1. Login Route
 @app.route('/login', methods=['POST'])
@@ -232,7 +238,7 @@ def get_user_subscribed_songs(email):
                     'artist': music_item['artist']['S'],
                     'album': music_item['album']['S'],
                     'year': int(music_item['year']['S']),
-                    'image_url': music_item['image_url']['S']
+                    'image_url': get_presigned_image_url(music_item['artist']['S'])
                 })
 
         return jsonify(songs), 200
@@ -310,7 +316,7 @@ def query_music():
                 'artist': item['artist']['S'],
                 'year': int(item['year']['S']),
                 'album': item['album']['S'],
-                'image_url': item['image_url']['S']
+                'image_url': get_presigned_image_url(item['artist']['S'])
             })
 
         return jsonify(results), 200
@@ -340,7 +346,14 @@ def subscribe_song():
     except Exception as e:
         print(f"Error in /subscribe: {e}")
         return jsonify({'message': 'Failed to subscribe'}), 500
-
+    
+def get_presigned_image_url(artist_name, expiration=3600):
+    key = f"album_img/{artist_name.replace(' ', '_').replace('/', '-')}.jpg"
+    return s3.generate_presigned_url(
+        'get_object',
+        Params={'Bucket': "group-78-a1", 'Key': key},
+        ExpiresIn=expiration
+    )
 
 if __name__ == '__main__':
     # Call the function to check if the 'music' table exists, and create it if not
