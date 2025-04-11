@@ -11,7 +11,6 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for the app
 
 # Initialize DynamoDB resource with specific credentials 
-# add here
 aws_access_key_id = os.getenv("aws_access_key_id")
 aws_secret_access_key = os.getenv("aws_secret_access_key")
 aws_session_token = os.getenv("aws_session_token")
