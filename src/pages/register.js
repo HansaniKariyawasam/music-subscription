@@ -12,7 +12,7 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await fetch("https://3iquyh2c7f.execute-api.us-east-1.amazonaws.com/production/userRegister", {
         method: "POST",
@@ -23,19 +23,20 @@ function Register() {
           body: JSON.stringify({ email, username, password })
         })
       });
-
+  
       const data = await response.json();
-
-      if (response.ok) {
+      if (data.statusCode === 200) {
         setError("");
         setSuccess("Registration successful! You can now login.");
         localStorage.setItem("user_name", username);
-        console.log(username, "resgister")
         setTimeout(() => {
           navigate("/");
         }, 2000);
+      } else if (data.statusCode === 409) {
+        setError("This email is already registered.");
+        setSuccess("");
       } else {
-        setError(data.message || "Registration failed");
+        setError(data.message || "Registration failed.");
         setSuccess("");
       }
     } catch (error) {
@@ -44,8 +45,7 @@ function Register() {
       console.error("Registration error:", error);
     }
   };
-
-  return (
+    return (
     <div
       style={{
         display: "flex",
