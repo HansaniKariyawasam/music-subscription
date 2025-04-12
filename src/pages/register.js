@@ -12,21 +12,25 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await fetch("http://localhost:5001/register", {
+      const response = await fetch("https://3iquyh2c7f.execute-api.us-east-1.amazonaws.com/production/userRegister", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, username, password })
+        body: JSON.stringify({
+          body: JSON.stringify({ email, username, password })
+        })
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setError("");
         setSuccess("Registration successful! You can now login.");
+        localStorage.setItem("user_name", username);
+        console.log(username, "resgister")
         setTimeout(() => {
           navigate("/");
         }, 2000);

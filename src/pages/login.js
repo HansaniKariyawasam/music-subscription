@@ -19,7 +19,7 @@ function Login() {
 
     try {
       // Send the login credentials to your backend API
-      const response = await fetch("http://localhost:5001/login", {
+      const response = await fetch("https://3iquyh2c7f.execute-api.us-east-1.amazonaws.com/production/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,9 +31,7 @@ function Login() {
 
       // Check for success or failure
       if (response.ok) {
-        // If login is successful, navigate to home page
-        const userName = result.user_name; // Extract the user_name from the response
-        localStorage.setItem("user_name", userName); // Example of saving to localStorage
+
         localStorage.setItem("userEmail", email);
         navigate("/home");
       } else {

@@ -29,7 +29,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
     }
 
     if (storedEmail) {
-      fetch(`http://localhost:5001/subscriptions/${storedEmail}`)
+      fetch(`https://3iquyh2c7f.execute-api.us-east-1.amazonaws.com/production/subscriptions?email=${storedEmail}`)
         .then((response) => response.json())
         .then((data) => {
           setSubscriptions(data);
@@ -40,24 +40,34 @@ const Home = ({ userSubscriptions, onLogout }) => {
           setLoading(false);
         });
     } else {
-      setLoading(false); // 
+      setLoading(false);
     }
   }, []);
 
 
-  const handleRemove = async (songId, songTitle) => {
+  const handleRemove = async (songid, songTitle) => {
     const email = localStorage.getItem("userEmail");
-    setRemovingSongId(songId);
-
+    setRemovingSongId(songid);
+  
+    const payload = {
+      body: JSON.stringify({
+        email,
+        songid
+      }),
+    };
+    
     try {
-      const response = await fetch("http://localhost:5001/unsubscribe", {
+      const response = await fetch("https://3iquyh2c7f.execute-api.us-east-1.amazonaws.com/production/unsubscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, songid: songId }),
+        body: JSON.stringify(payload),
       });
-
+  
+      const responseData = await response.json();
+      console.log("Lambda response:", responseData);
+  
       if (response.ok) {
-        setSubscriptions(prev => prev.filter(song => song.id !== songId));
+        setSubscriptions(prev => prev.filter(song => song.id !== songid));
         setRemoveMessage(`"${songTitle}" removed from your subscriptions`);
       } else {
         alert("Failed to unsubscribe.");
@@ -75,17 +85,24 @@ const Home = ({ userSubscriptions, onLogout }) => {
   const handleSubscribe = async (song) => {
     const email = localStorage.getItem("userEmail");
     setSubscribingSongId(song.id);
-
+  
+    const payload = {
+      body: JSON.stringify({
+        email,
+        song: { id: song.id }
+      }),
+    };
+    
     try {
-      const response = await fetch("http://localhost:5001/subscribe", {
+      const response = await fetch("https://3iquyh2c7f.execute-api.us-east-1.amazonaws.com/production/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, song }),
+        body: JSON.stringify(payload),
       });
-
+    
       if (response.ok) {
         setSubscriptions((prev) => [...prev, song]);
-        setSubscribeMessage(`You subscribed to: ` + `"${song.title}"`);
+        setSubscribeMessage(`You subscribed to: "${song.title}"`);
       } else {
         alert("Failed to subscribe.");
       }
@@ -97,7 +114,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
       setTimeout(() => setSubscribeMessage(""), 3000);
     }
   };
-
+  
 
 
   const handleQuery = async () => {
@@ -107,21 +124,23 @@ const Home = ({ userSubscriptions, onLogout }) => {
       return;
     }
     setSearching(true);
-
+  
     try {
-      const response = await fetch("http://localhost:5001/query", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(query),
-      });
-
+      const params = new URLSearchParams();
+      if (query.title) params.append("title", query.title);
+      if (query.year) params.append("year", query.year);
+      if (query.artist) params.append("artist", query.artist);
+      if (query.album) params.append("album", query.album);
+  
+      const response = await fetch(`https://3iquyh2c7f.execute-api.us-east-1.amazonaws.com/production/query?${params.toString()}`);
+  
       const data = await response.json();
-
+  
       if (data.length === 0) {
         setMessage("No result is retrieved. Please query again.");
         setQueryResults([]);
       } else {
-        setMessage(""); // clear any previous message
+        setMessage(""); 
         setQueryResults(data);
       }
     } catch (error) {
@@ -129,7 +148,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
       setMessage("Something went wrong. Please try again later.");
       setQueryResults([]);
     } finally {
-      setSearching(false); // 👈 End spinner
+      setSearching(false);
     }
   };
 
