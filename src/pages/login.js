@@ -12,9 +12,11 @@ function Login() {
     e.preventDefault();
 
     // Create the request body
-    const requestBody = {
-      email,
-      password,
+    const payload = {
+      body: JSON.stringify({
+        email,
+        password
+      })
     };
 
     try {
@@ -22,27 +24,29 @@ function Login() {
       const response = await fetch("https://3iquyh2c7f.execute-api.us-east-1.amazonaws.com/production/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify(payload)
       });
 
       const result = await response.json(); // Parse the JSON response
 
-      // Check for success or failure
-      if (response.ok) {
-
+      if (result.statusCode === 200) {
         localStorage.setItem("userEmail", email);
         navigate("/home");
+      } else if (result.statusCode === 401) {
+        setError("Invalid email or password.");
+      } else if (result.statusCode === 400) {
+        setError("Please fill in all fields.");
       } else {
-        // If login fails, show error message
-        setError(result.message);
+        setError(result.message || "Login failed. Please try again.");
       }
     } catch (error) {
-      // If there was an error with the request (network issues, etc.)
       setError("Something went wrong. Please try again.");
+      console.error("Login error:", error);
     }
   };
+  
 
   return (
     <div
