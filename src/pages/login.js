@@ -29,10 +29,14 @@ function Login() {
         body: JSON.stringify(payload)
       });
 
-      const result = await response.json(); // Parse the JSON response
+      const result = await response.json();
+      const parsedBody = JSON.parse(result.body);
+  
 
       if (result.statusCode === 200) {
+        console.log("test", result)
         localStorage.setItem("userEmail", email);
+        localStorage.setItem("user_name", parsedBody.user_name);
         navigate("/home");
       } else if (result.statusCode === 401) {
         setError("Invalid email or password.");

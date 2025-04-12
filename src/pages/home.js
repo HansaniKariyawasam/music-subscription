@@ -25,6 +25,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
     const storedEmail = localStorage.getItem("userEmail");
 
     if (storedUserName) {
+      const storedUserName = localStorage.getItem("user_name");
       setUserName(storedUserName);
     }
 
