@@ -497,7 +497,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                       <img
-                        src={song.image_url}
+                        src={song.image_base64}
                         alt={song.artist}
                         style={{
                           width: "60px",
