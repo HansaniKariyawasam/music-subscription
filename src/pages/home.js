@@ -332,7 +332,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
                 {/* Song Info */}
                 <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                   <img
-                    src={song.image_base64}
+                    src={song.image_url}
                     alt={song.artist}
                     style={{
                       width: "60px",
@@ -497,7 +497,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                       <img
-                        src={song.image_base64}
+                        src={song.image_url}
                         alt={song.artist}
                         style={{
                           width: "60px",
