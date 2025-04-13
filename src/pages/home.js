@@ -332,7 +332,7 @@ const Home = ({ userSubscriptions, onLogout }) => {
                 {/* Song Info */}
                 <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                   <img
-                    src={song.image_url}
+                    src={song.image_base64}
                     alt={song.artist}
                     style={{
                       width: "60px",
